@@ -18,8 +18,8 @@ router.post("/comment", Middleware, async (req, res) => {
         const post = await Post.findById(PostId);
         post?.Comments.push(comment.id);
         await post?.save();
-        
-        res.status(200).json({ msg: "Comment Created", comment });
+
+        res.status(200).json({ Check : true ,  msg: "Comment Created", comment });
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal error Occured");
@@ -29,15 +29,16 @@ router.post("/comment", Middleware, async (req, res) => {
 // Route 2 : To Like a Post PORT : api/intract/like
 
 router.post("/like", Middleware, async (req, res) => {
-    const { PostId } = req.body;
     try {
+        const { PostId } = req.body;
+        if(!PostId) return res.status(400).json({ msg: "PostId is required" })
         const post = await Post.findById(PostId);
         if (post && post.Likes.includes(req.body.user.id)) {
-            return res.status(400).json({ msg: "Already Liked" });
+            return res.status(200).json({ Check : true ,  msg: "Already Liked" });
         }
         post?.Likes.push(req.body.user.id);
         await post?.save();
-        res.status(200).json({ msg: "Post Liked" });
+        res.status(200).json({ Check : true ,  msg: "Post Liked" });
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal error Occured");

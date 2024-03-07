@@ -29,7 +29,7 @@ router.post("/comment", Middleware_1.default, (req, res) => __awaiter(void 0, vo
         const post = yield Post_1.default.findById(PostId);
         post === null || post === void 0 ? void 0 : post.Comments.push(comment.id);
         yield (post === null || post === void 0 ? void 0 : post.save());
-        res.status(200).json({ msg: "Comment Created", comment });
+        res.status(200).json({ Check: true, msg: "Comment Created", comment });
     }
     catch (error) {
         console.log(error);
@@ -38,15 +38,17 @@ router.post("/comment", Middleware_1.default, (req, res) => __awaiter(void 0, vo
 }));
 // Route 2 : To Like a Post PORT : api/intract/like
 router.post("/like", Middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { PostId } = req.body;
     try {
+        const { PostId } = req.body;
+        if (!PostId)
+            return res.status(400).json({ msg: "PostId is required" });
         const post = yield Post_1.default.findById(PostId);
         if (post && post.Likes.includes(req.body.user.id)) {
-            return res.status(400).json({ msg: "Already Liked" });
+            return res.status(200).json({ Check: true, msg: "Already Liked" });
         }
         post === null || post === void 0 ? void 0 : post.Likes.push(req.body.user.id);
         yield (post === null || post === void 0 ? void 0 : post.save());
-        res.status(200).json({ msg: "Post Liked" });
+        res.status(200).json({ Check: true, msg: "Post Liked" });
     }
     catch (error) {
         console.log(error);

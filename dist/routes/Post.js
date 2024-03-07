@@ -27,16 +27,46 @@ router.post("/createpost", Middleware_1.default, (req, res) => __awaiter(void 0,
             Comments: [],
             Likes: [],
         });
-        res.status(200).json({ msg: "Post Created", post });
+        res.status(200).json({ Check: true, msg: "Post Created", post });
     }
     catch (error) {
         console.log(error);
         res.status(500).send("Internal error Occured");
     }
 }));
-router.get("/allpost", Middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/allpost", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const posts = yield Post_1.default.find().populate('Author', 'Name').populate('Comments', 'Author'.toUpperCase()).populate('Likes', 'Name');
+        const posts = yield Post_1.default.find()
+            .populate("Author", "Name")
+            .populate({
+            path: "Comments",
+            select: "Author Content",
+            populate: {
+                path: "Author",
+                select: "Name",
+            },
+        })
+            .populate("Likes", "Name");
+        res.status(200).json({ posts });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send("Internal error Occured");
+    }
+}));
+router.get("/mypost", Middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const posts = yield Post_1.default.find({ Author: req.body.user.id })
+            .populate("Author", "Name")
+            .populate({
+            path: "Comments",
+            select: "Author Content",
+            populate: {
+                path: "Author",
+                select: "Name",
+            },
+        })
+            .populate("Likes", "Name");
         res.status(200).json({ posts });
     }
     catch (error) {
@@ -59,7 +89,7 @@ router.put("/updatepost/:id", Middleware_1.default, (req, res) => __awaiter(void
         post.Title = Title;
         post.Content = Content;
         yield post.save();
-        res.status(200).json({ msg: "Post Updated", post });
+        res.status(200).json({ Check: true, msg: "Post Updated", post });
     }
     catch (error) {
         console.log(error);
@@ -78,7 +108,7 @@ router.delete("/deletepost/:id", Middleware_1.default, (req, res) => __awaiter(v
             return res.status(401).json({ msg: "Not Authorized" });
         }
         yield post.deleteOne();
-        res.status(200).json({ msg: "Post Deleted" });
+        res.status(200).json({ Check: true, msg: "Post Deleted" });
     }
     catch (error) {
         console.log(error);

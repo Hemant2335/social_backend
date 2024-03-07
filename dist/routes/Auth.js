@@ -52,7 +52,7 @@ router.post("/signup", [
         });
         const token = jsonwebtoken_1.default.sign({ user: { id: user.id } }, process.env.JWT);
         Check = true;
-        res.status(200).json({ Check, msg: "User Created", token: token });
+        res.status(200).json({ Check, msg: "User Created", authtoken: token, user });
     }
     catch (error) {
         console.log(error);
@@ -96,7 +96,7 @@ router.post("/signin", [
         };
         Check = true;
         const authtoken = jsonwebtoken_1.default.sign(data, process.env.JWT);
-        res.json({ Check, authtoken });
+        res.json({ Check, authtoken, user });
     }
     catch (error) {
         console.log(error);
@@ -120,7 +120,7 @@ router.post("/changepassword", (req, res) => __awaiter(void 0, void 0, void 0, f
             res.send({ Check, user });
         }
         else {
-            res.status(400).send("User not found");
+            res.status(400).send({ Check, Msg: "User not found" });
         }
     }
     catch (error) {

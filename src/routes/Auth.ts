@@ -54,7 +54,7 @@ router.post(
         process.env.JWT as string
       );
       Check = true;
-      res.status(200).json({ Check, msg: "User Created", token: token });
+      res.status(200).json({ Check, msg: "User Created", authtoken: token , user  });
     } catch (error) {
       console.log(error);
       res.status(500).send("Internal error Occured");
@@ -110,7 +110,7 @@ router.post(
       };
       Check = true;
       const authtoken = jwt.sign(data, process.env.JWT as Secret);
-      res.json({ Check, authtoken });
+      res.json({ Check, authtoken , user });
     } catch (error) {
       console.log(error);
       res.status(500).send("Internal  error Occured");
@@ -137,7 +137,7 @@ router.post(
         Check = true;
         res.send({ Check, user });
       } else {
-        res.status(400).send("User not found");
+        res.status(400).send({Check , Msg : "User not found"});
       }
     } catch (error) {
       console.log(error);
