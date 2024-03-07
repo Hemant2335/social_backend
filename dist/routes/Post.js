@@ -36,8 +36,49 @@ router.post("/createpost", Middleware_1.default, (req, res) => __awaiter(void 0,
 }));
 router.get("/allpost", Middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const posts = yield Post_1.default.find().populate('Author', 'Name').populate('Comments', 'Content').populate('Likes', 'Name');
+        const posts = yield Post_1.default.find().populate('Author', 'Name').populate('Comments', 'Author'.toUpperCase()).populate('Likes', 'Name');
         res.status(200).json({ posts });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send("Internal error Occured");
+    }
+}));
+// Route 3 : route to update the post PORT : api/post/updatepost
+router.put("/updatepost/:id", Middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { Title, Content } = req.body;
+    try {
+        let post = yield Post_1.default.findById(req.params.id);
+        if (!post) {
+            return res.status(400).json({ msg: "No Post Found" });
+        }
+        if (post && ((_a = post.Author) === null || _a === void 0 ? void 0 : _a.toString()) !== req.body.user.id) {
+            return res.status(401).json({ msg: "Not Authorized" });
+        }
+        post.Title = Title;
+        post.Content = Content;
+        yield post.save();
+        res.status(200).json({ msg: "Post Updated", post });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send("Internal error Occured");
+    }
+}));
+// Route 4 : route to delete the post PORT : api/post/deletepost
+router.delete("/deletepost/:id", Middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    try {
+        let post = yield Post_1.default.findById(req.params.id);
+        if (!post) {
+            return res.status(400).json({ msg: "No Post Found" });
+        }
+        if (post && ((_b = post.Author) === null || _b === void 0 ? void 0 : _b.toString()) !== req.body.user.id) {
+            return res.status(401).json({ msg: "Not Authorized" });
+        }
+        yield post.deleteOne();
+        res.status(200).json({ msg: "Post Deleted" });
     }
     catch (error) {
         console.log(error);
