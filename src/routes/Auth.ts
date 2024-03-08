@@ -125,10 +125,9 @@ router.post(
   async (req: Request, res: Response) => {
     let Check = false;
     // Again we will check for errors first
-    const { Password } = req.body;
+    const {Email , Password } = req.body;
     try {
-      const userID = req.body.user.id;
-      const user = await User.findById(userID);
+      const user = await User.findOne({Email : Email});
       if (user) {
         const salt = await bcrypt.genSalt(10);
         const hashedpassword = await bcrypt.hash(Password, salt);

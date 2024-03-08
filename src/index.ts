@@ -5,7 +5,7 @@ const app = express();
 const PORT = 5000;
 require('dotenv').config();
 app.use(express.json());
-app.use(cors({origin: "http://localhost:5173"}));
+app.use(cors({origin: ["http://localhost:5173" , "https://social-gamma-nine.vercel.app"]}));
 
 // function to connect to the database
 

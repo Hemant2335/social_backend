@@ -19,7 +19,7 @@ const app = (0, express_1.default)();
 const PORT = 5000;
 require('dotenv').config();
 app.use(express_1.default.json());
-app.use((0, cors_1.default)({ origin: "http://localhost:5173" }));
+app.use((0, cors_1.default)({ origin: ["http://localhost:5173", "https://social-gamma-nine.vercel.app"] }));
 // function to connect to the database
 const connecttomongo = () => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connect(process.env.MONGO_URI);

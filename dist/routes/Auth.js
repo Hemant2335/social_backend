@@ -107,10 +107,9 @@ router.post("/signin", [
 router.post("/changepassword", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let Check = false;
     // Again we will check for errors first
-    const { Password } = req.body;
+    const { Email, Password } = req.body;
     try {
-        const userID = req.body.user.id;
-        const user = yield User_1.default.findById(userID);
+        const user = yield User_1.default.findOne({ Email: Email });
         if (user) {
             const salt = yield bcrypt_1.default.genSalt(10);
             const hashedpassword = yield bcrypt_1.default.hash(Password, salt);
